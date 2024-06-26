@@ -1,0 +1,26 @@
+<html>
+    <body>
+        <h1>Touchstone Auth Flask Library</h1>
+        <ul>
+            <li>Test App Routes
+                <ul>
+                    <li><a href="{{url_for('index')}}">home (public, this page)</a></li>
+                    <li><a href="{{url_for('protected')}}">protected (auth required)</a></li>
+                </ul>
+            </li>
+            <li>Auth Blueprint Routes
+                <ul>
+                    <li><a href="{{url_for('touchstone_auth_bp.login')}}">login</a></li>
+                    <li><a href="{{url_for('touchstone_auth_bp.logout')}}">logout</a></li>
+                    <li><a href="{{url_for('touchstone_auth_bp.whoami')}}">whoami</a></li>
+                </ul>
+            </li>
+            <li>SAML Routes
+                <ul>
+                    <li><a href="{{url_for('touchstone_auth_bp.saml_login')}}">SAML login</a></li>
+                    <li><a href="{{url_for('touchstone_auth_bp.saml_metadata')}}">metadata</a></li>
+                </ul>
+            </li>
+        </ul>
+    </body>
+</html>
