@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+docker = "*"
+flask = "*"
+python3-saml = "*"
+flask-login = "*"
+setuptools = "*"
+
+[dev-packages]
+black = "*"
+coveralls = "*"
+ipython = "*"
+mypy = "*"
+pre-commit = "*"
+pytest = "*"
+ruff = "*"
+types-flask = "*"
+
+[requires]
+python_version = "3.12"
+
+[scripts]
+simple_saml_server = "python touchstone_auth_flask/lib/utils/simple_saml_server.py"
