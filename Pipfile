@@ -24,4 +24,5 @@ types-flask = "*"
 python_version = "3.12"
 
 [scripts]
+test_flask_app = "python -c \"from touchstone_auth_flask.app import app; app.run()\""
 simple_saml_server = "python touchstone_auth_flask/lib/utils/simple_saml_server.py"
