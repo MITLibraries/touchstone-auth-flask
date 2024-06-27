@@ -95,26 +95,27 @@ touchstone-auth-flask = {git = "git+https://github.com/MITLibraries/touchstone-a
 ### Required
 
 ```shell
-# Service provider
+# General
+FLASK_ENV=development # drives Config classes used in touchstone_auth_flask.lib.config
+SECRET_KEY=# required by python3-saml and flask-login; default value provided in development and testing contexts
+AUTH_DEFAULT_VIEW=# default Flask route during logout or login with next URL; e.g. "index" or "my_blueprint.foo" 
+
+# SAML Service provider
 SP_ENTITY_ID=# primary login URL for this SP, likely ending with /auth/saml/login
 SP_ACS_URL=# primary handshake URL for this SP, likely ending with /auth/saml/acs
-SP_CERT=# this SP certificate 
-SP_KEY=# this SP key
-SECRET_KEY=# required by python3-saml and flask-login; default value provided in development and testing contexts
+SP_CERT=# this SP certificate; optional for local development where it will get set automatically 
+SP_KEY=# this SP key; optional for local development where it will get set automatically
 
-# Identity provider
-IDP_CERT=# IdP (Touchstone) certificate
+# SAML Identity provider
 IDP_ENTITY_ID=# IdP (Touchstone) login endpoint
-IDP_SSO_URL=# IdP (Touchstone) SSO endpoint
-
 URN_UID=# dictionary key in the parsed IdP SAML response for the authenticated user's unique identifier
-
-AUTH_DEFAULT_VIEW=# default Flask route during logout or login with next URL; e.g. "index" or "my_blueprint.foo" 
 ```
 
 ### Optional / Development
 
 ```shell
-FLASK_ENV=development # drives Config classes used in touchstone_auth_flask.lib.config
+# SAML Identity provider
+IDP_CERT=# IdP (Touchstone) certificate; if set will override that retrieved from IdP metadata
+IDP_SSO_URL=# IdP (Touchstone) SSO endpoint; if set will override that retrieved from IdP metadata
 ```
 
