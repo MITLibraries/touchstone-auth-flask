@@ -13,35 +13,6 @@ from onelogin.saml2.idp_metadata_parser import OneLogin_Saml2_IdPMetadataParser
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_SAML_SETTINGS: dict = {
-    "strict": True,
-    "debug": False,
-    "sp": {
-        "entityId": "",
-        "assertionConsumerService": {
-            "url": "",
-            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
-        },
-        "x509cert": "",
-        "privateKey": "",
-    },
-    "idp": {
-        "entityId": "",
-        "singleSignOnService": {
-            "url": "",
-            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
-        },
-        "x509cert": "",
-    },
-    "security": {
-        "requestedAuthnContext": False,
-        "signMetadata": True,
-        "authnRequestsSigned": True,
-        "wantAssertionsEncrypted": True,
-        "wantAssertionsSigned": True,
-    },
-}
-
 
 def get_saml_auth_obj(request: Request) -> OneLogin_Saml2_Auth:
     """Get OneLogin_Saml2_Auth object."""
@@ -51,30 +22,44 @@ def get_saml_auth_obj(request: Request) -> OneLogin_Saml2_Auth:
 
 
 def load_saml_settings() -> dict:
-    """Load SAML settings for all IdP/SP interactions.
+    """Provide a dictionary of SAML settings for IdP/SP interactions.
 
-    This function overrides or adds values to DEFAULT_SAML_SETTINGS defined above.
+    This function makes use of IdP and SP configurations set in the Flask app config.
     """
-    saml_settings = DEFAULT_SAML_SETTINGS
-
+    # update select IdP and SP configurations in Flask app config
     set_idp_sso_url_and_cert()
     set_development_sp_key_and_cert()
 
-    saml_settings["debug"] = True
-    saml_settings["sp"]["entityId"] = current_app.config["SP_ENTITY_ID"]
-    saml_settings["sp"]["assertionConsumerService"]["url"] = current_app.config[
-        "SP_ACS_URL"
-    ]
-    saml_settings["sp"]["x509cert"] = current_app.config["SP_CERT"]
-    saml_settings["sp"]["privateKey"] = current_app.config["SP_KEY"]
-    saml_settings["idp"]["entityId"] = current_app.config["IDP_ENTITY_ID"]
-    saml_settings["idp"]["singleSignOnService"]["url"] = current_app.config["IDP_SSO_URL"]
-    saml_settings["idp"]["x509cert"] = current_app.config["IDP_CERT"]
-    saml_settings["security"]["wantAssertionsEncrypted"] = current_app.config.get(
-        "SP_SECURITY_ASSERTIONS_ENCRYPTED", False
-    )
-
-    return saml_settings
+    return {
+        "strict": True,
+        "debug": current_app.config["DEBUG"],
+        "sp": {
+            "entityId": current_app.config["SP_ENTITY_ID"],
+            "assertionConsumerService": {
+                "url": current_app.config["SP_ACS_URL"],
+                "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+            },
+            "x509cert": current_app.config["SP_CERT"],
+            "privateKey": current_app.config["SP_KEY"],
+        },
+        "idp": {
+            "entityId": current_app.config["IDP_ENTITY_ID"],
+            "singleSignOnService": {
+                "url": current_app.config["IDP_SSO_URL"],
+                "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+            },
+            "x509cert": current_app.config["IDP_CERT"],
+        },
+        "security": {
+            "requestedAuthnContext": False,
+            "signMetadata": True,
+            "authnRequestsSigned": True,
+            "wantAssertionsEncrypted": current_app.config.get(
+                "SP_SECURITY_ASSERTIONS_ENCRYPTED", False
+            ),
+            "wantAssertionsSigned": True,
+        },
+    }
 
 
 def set_idp_sso_url_and_cert() -> None:
